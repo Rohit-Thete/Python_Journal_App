@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
+#from django.core.validators import 
 from .models import Journal
 
 
@@ -32,7 +33,11 @@ class RegisterSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Username already exists")
         return value
     
-    
+
+    def validate_password(self,value):
+        if len(value) < 6:
+            raise serializers.ValidationError("Password Must be at least 6 characters")
+        return value
 
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)
