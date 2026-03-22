@@ -25,6 +25,15 @@ class RegisterSerializer(serializers.ModelSerializer):
         model = User
         fields = ['username', 'email', 'password']
 
+    def validate_username(self,value):
+        if len(value) < 5:
+            raise serializers.ValidationError("Username must be at least 5 characters")
+        if User.objects.filter(username=value).exists():
+            raise serializers.ValidationError("Username already exists")
+        return value
+    
+    
+
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)
         return user
